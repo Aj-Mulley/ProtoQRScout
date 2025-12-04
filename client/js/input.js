@@ -5,8 +5,10 @@ document.getElementById('data-form').addEventListener('submit', async (e) => {
   const data = Object.fromEntries(new FormData(form).entries());
   const statusEl = document.getElementById('status');
   const qrContainer = document.getElementById('qrcode');
+  const qrWrapper = document.getElementById('qr-container');
 
   qrContainer.innerHTML = '';
+  qrWrapper.style.display = 'none';
   statusEl.textContent = 'Submitting...';
 
   try {
@@ -23,6 +25,7 @@ document.getElementById('data-form').addEventListener('submit', async (e) => {
   } catch (err) {
     console.error(err);
     statusEl.textContent = '⚠️ Backend unreachable — generating QR fallback...';
+    qrWrapper.style.display = 'block';
 
     // Convert to JSON string for QR
     const jsonData = JSON.stringify(data);
