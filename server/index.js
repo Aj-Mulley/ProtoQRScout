@@ -9,10 +9,11 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../client"))); // Serves your frontend files
 
-// Path to data file
+// Paths to data files
 const dataFilePath = path.join(__dirname, "../data/data.json");
+const summaryFilePath = path.join(__dirname, "../data/summary.json");
 
-// Helper function to read and write data
+// Helper function to read/write raw data
 function readData() {
   if (!fs.existsSync(dataFilePath)) return [];
   const file = fs.readFileSync(dataFilePath);
@@ -23,7 +24,53 @@ function writeData(newData) {
   fs.writeFileSync(dataFilePath, JSON.stringify(newData, null, 2));
 }
 
-// Route to handle form submissions
+// =========================
+// SUMMARY GENERATOR LOGIC
+// =========================
+function generateSummary() {
+  const rawData = readData();
+
+  const teams = {};
+
+  for (const item of rawData) {
+    const team = item.teamNumber;
+
+    if (!teams[team]) {
+      teams[team] = {
+        teamNumber: team,
+        scores: [],
+        matches: [],
+        notes: []
+      };
+    }
+
+    teams[team].scores.push(Number(item.score));
+    teams[team].matches.push(Number(item.matchNumber));
+
+    if (item.notes && item.notes.trim() !== "") {
+      teams[team].notes.push(item.notes.trim());
+    }
+  }
+
+  const summary = Object.values(teams).map(team => ({
+    teamNumber: team.teamNumber,
+    averageScore: team.scores.reduce((a, b) => a + b, 0) / team.scores.length,
+    matches: team.matches,
+    notes: team.notes
+  }));
+
+  return summary;
+}
+
+function writeSummary(summaryData) {
+  fs.writeFileSync(summaryFilePath, JSON.stringify(summaryData, null, 2));
+}
+
+// =========================
+// API ROUTES
+// =========================
+
+// Handle raw submissions
 app.post("/api/submit", (req, res) => {
   const data = req.body;
 
@@ -36,13 +83,33 @@ app.post("/api/submit", (req, res) => {
     ...data,
     timestamp: new Date().toISOString(),
   });
+
   writeData(currentData);
 
   console.log("✅ Data received:", data);
   res.json({ message: "Data successfully saved!" });
 });
 
-// Start server
+// Generate summary.json
+app.get("/api/summary/generate", (req, res) => {
+  const summary = generateSummary();
+  writeSummary(summary);
+  res.json({ message: "Summary generated", summary });
+});
+
+// Return summary.json contents
+app.get("/api/summary", (req, res) => {
+  if (!fs.existsSync(summaryFilePath)) {
+    return res.status(404).json({ message: "summary.json not found. Generate it first." });
+  }
+
+  const summaryData = JSON.parse(fs.readFileSync(summaryFilePath));
+  res.json(summaryData);
+});
+
+// =========================
+// START SERVER
+// =========================
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
