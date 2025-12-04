@@ -1,49 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Input</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
-  <!-- QR Code Library -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProtoQR Scout</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-  <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-6 text-center">Match Data Entry</h1>
+<body>
 
-    <form id="data-form" class="space-y-4">
-      <div>
-        <label for="teamNumber" class="block font-medium">Team Number</label>
-        <input type="number" id="teamNumber" name="teamNumber" class="border border-gray-300 p-2 rounded w-full" required>
-      </div>
+  <div class="container">
+    <h1>ProtoQR Scout</h1>
 
-      <div>
-        <label for="matchNumber" class="block font-medium">Match Number</label>
-        <input type="number" id="matchNumber" name="matchNumber" class="border border-gray-300 p-2 rounded w-full" required>
-      </div>
+    <form id="scoutForm">
+      <label for="teamNumber">Team Number</label>
+      <input type="number" id="teamNumber" required />
 
-      <div>
-        <label for="score" class="block font-medium">Score</label>
-        <input type="number" id="score" name="score" class="border border-gray-300 p-2 rounded w-full" required>
-      </div>
+      <label for="matchNumber">Match Number</label>
+      <input type="number" id="matchNumber" required />
 
-      <div>
-        <label for="notes" class="block font-medium">Notes</label>
-        <textarea id="notes" name="notes" class="border border-gray-300 p-2 rounded w-full" rows="3"></textarea>
-      </div>
+      <label for="score">Score</label>
+      <input type="number" id="score" required />
 
-      <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">Submit</button>
+      <button type="submit">Submit</button>
     </form>
 
-    <!-- Status text -->
-    <p id="status" class="mt-4 text-center text-sm text-gray-600"></p>
+    <div id="qr-container" style="display: none;">
+      <h2>Offline QR Backup</h2>
+      <div id="qrcode"></div>
+    </div>
 
-    <!-- QR code container (hidden until needed) -->
-    <div id="qrcode" class="flex justify-center mt-4"></div>
   </div>
-
-  <script src="js/input.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="input.js"></script>
 </body>
 </html>
