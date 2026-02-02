@@ -11,7 +11,7 @@
   <div class="container">
     <h1>ProtoQR Scout</h1>
 
-    <form id="data-form">
+     <form id="data-form">
       <label for="teamNumber">Team Number</label>
       <input type="number" id="teamNumber" name="teamNumber" required />
 
@@ -20,7 +20,7 @@
 
       <label for="score">Score</label>
       <input type="number" id="score" name="score" required />
-      
+
       <label for="notes">Notes</label>
       <input type="text" id="notes" name="notes">
 
@@ -28,14 +28,15 @@
     </form>
 
     <p id="status"></p>
-
     <div id="qr-container" style="display: none;">
       <h2>Offline QR Backup</h2>
       <div id="qrcode"></div>
     </div>
-  </div>
 
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="js/input.js"></script>
+      
+
 </body>
 </html>
