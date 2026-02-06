@@ -1,6 +1,9 @@
+const axios = require('axios');
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const webhookUrl = 'http://localhost:3001/data';
+
 
 const app = express();
 const PORT = 3000;
@@ -23,6 +26,9 @@ function readData() {
 function writeData(newData) {
   fs.writeFileSync(dataFilePath, JSON.stringify(newData, null, 2));
 }
+
+
+
 
 // =========================
 // SUMMARY GENERATOR LOGIC
@@ -86,6 +92,20 @@ app.post("/api/submit", (req, res) => {
 
   writeData(currentData);
 
+  const payload = {
+    username: "ProtoQR Scout",
+    teamNumber: data.teamNumber,
+    matchNumber: data.matchNumber,
+    score: data.score,
+    notes: data.notes,
+    timestamp: new Date().toISOString()
+};
+
+axios.post(webhookUrl, payload, {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
   console.log("✅ Data received:", data);
   res.json({ message: "Data successfully saved!" });
 });
@@ -105,6 +125,28 @@ app.get("/api/summary", (req, res) => {
 
   const summaryData = JSON.parse(fs.readFileSync(summaryFilePath));
   res.json(summaryData);
+});
+
+const payload = {
+    username: "ProtoQR Scout",
+    content: "Server Started!",
+    // Add any other data your webhook expects
+    data: {
+        status: "success",
+        timestamp: new Date().toISOString()
+    }
+};
+
+axios.post(webhookUrl, payload, {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    console.log('Webhook sent successfully! Status:', response.status);
+})
+.catch(error => {
+    console.error('Error sending webhook:', error.message);
 });
 
 // =========================
