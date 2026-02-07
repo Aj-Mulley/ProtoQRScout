@@ -2,8 +2,9 @@ const axios = require('axios');
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const webhookUrl = 'http://localhost:3001/data';
-
+const webhookUrl = 'http://73.60.208.53:3001/data';
+const webhookUrl_Startup = 'http://73.60.208.53:3001/startup';
+//const webhookUrl = 'http://localhost:3001/data';
 
 const app = express();
 const PORT = 3000;
@@ -93,7 +94,6 @@ app.post("/api/submit", (req, res) => {
   writeData(currentData);
 
   const payload = {
-    username: "ProtoQR Scout",
     teamNumber: data.teamNumber,
     matchNumber: data.matchNumber,
     score: data.score,
@@ -137,7 +137,7 @@ const payload = {
     }
 };
 
-axios.post(webhookUrl, payload, {
+axios.post(webhookUrl_Startup, payload, {
     headers: {
         'Content-Type': 'application/json'
     }
