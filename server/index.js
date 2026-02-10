@@ -1,6 +1,10 @@
+const axios = require('axios');
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+
+const webhookUrl = 'http://73.60.208.53:3001/data';
+const webhookUrl_Startup = 'http://73.60.208.53:3001/startup';
 
 const app = express();
 const PORT = 3000;
@@ -100,9 +104,37 @@ app.post("/api/submit", (req, res) => {
 
   writeData(currentData);
 
+  const payload = {
+    scoutName: data.scoutName,
+    teamNumber: data.teamNumber,
+    matchNumber: data.matchNumber,
+    startPos: data.startPos,
+    autoOutpost: data.autoOutpost,
+    autoDepot: data.autoDepot,
+    autoNeutral: data.autoNeutral,
+    autoFuel: data.autoFuel,
+    autoClimb: data.autoClimb,
+    teleFuel: data.teleFuel,
+    travelLocation: data.travelLocation,
+    teleopOutpost: data.teleopOutpost,
+    teleopDepot: data.teleopDepot,
+    teleopNeutral: data.teleopNeutral,
+    endClimb: data.endClimb,
+    died: data.died,
+    notes: data.notes,
+
+    timestamp: new Date().toISOString()
+};
+
+axios.post(webhookUrl, payload, {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
   console.log("✅ Data received:", data);
   res.json({ message: "Data successfully saved!" });
 });
+
 
 // Generate summary.json
 app.get("/api/summary/generate", (req, res) => {
@@ -120,7 +152,27 @@ app.get("/api/summary", (req, res) => {
   const summaryData = JSON.parse(fs.readFileSync(summaryFilePath));
   res.json(summaryData);
 });
+const payload = {
+    username: "ProtoQR Scout",
+    content: "Server Started!",
+    // Add any other data your webhook expects
+    data: {
+        status: "success",
+        timestamp: new Date().toISOString()
+    }
+};
 
+axios.post(webhookUrl_Startup, payload, {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    console.log('Webhook sent successfully! Status:', response.status);
+})
+.catch(error => {
+    console.error('Error sending webhook:', error.message);
+});
 // =========================
 // START SERVER
 // =========================
