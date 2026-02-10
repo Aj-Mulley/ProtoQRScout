@@ -1,6 +1,16 @@
+[
+  {
+    "teamNumber": "1",
     "matchNumber": "2",
     "score": "4",
     "notes": "balls",
-    "timestamp": "2026-02-03T00:41:28.375Z"
+    "timestamp": "2026-02-07T14:31:08.470Z"
   },
-[]
+  {
+    "teamNumber": "1",
+    "matchNumber": "2",
+    "score": "4",
+    "notes": "balls",
+    "timestamp": "2026-02-07T14:31:22.957Z"
+  }
+]

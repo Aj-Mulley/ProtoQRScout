@@ -5,6 +5,7 @@ const path = require("path");
 const webhookUrl = 'http://73.60.208.53:3001/data';
 const webhookUrl_Startup = 'http://73.60.208.53:3001/startup';
 //const webhookUrl = 'http://localhost:3001/data';
+//const webhookUrl_Startup = 'http://localhost:3001/startup';
 
 const app = express();
 const PORT = 3000;
