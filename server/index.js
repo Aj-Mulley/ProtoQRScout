@@ -38,15 +38,26 @@ function generateSummary() {
     if (!teams[team]) {
       teams[team] = {
         teamNumber: team,
-        scores: [],
+        autoFuel: [],
+        teleFuel: [],
         matches: [],
-        notes: []
+        startPos: [],
+        travelLocation: [],
+        pickupLocations: [],
+        notes: [],
+
       };
     }
 
-    teams[team].scores.push(Number(item.score));
+    
+    teams[team].autoFuel.push(Number(item.autoFuel));
+    teams[team].teleFuel.push(Number(item.teleFuel));
     teams[team].matches.push(Number(item.matchNumber));
-
+    teams[team].startPos.push(item.startPos);
+    teams[team].pickupLocations.push(item.autoOutpost + " " + item.autoDepot + " " + item.autoNeutral + " " + item.teleopOutpost + " " + item.teleopDepot + " " + item.teleopNeutral);
+    teams[team].travelLocation.push(item.travelLocation);
+    teams[team].died.push(item.died);
+    teams[team].Climb.push(item.endClimb + " " + item.autoClimb);
     if (item.notes && item.notes.trim() !== "") {
       teams[team].notes.push(item.notes.trim());
     }
@@ -54,8 +65,11 @@ function generateSummary() {
 
   const summary = Object.values(teams).map(team => ({
     teamNumber: team.teamNumber,
-    averageScore: team.scores.reduce((a, b) => a + b, 0) / team.scores.length,
+    averageFuel: team.autoFuel.reduce((a, b) => a + b, 0) / team.autoFuel.length,
     matches: team.matches,
+    startPos: team.startPos,
+    pickupLocations: team.pickupLocations,
+
     notes: team.notes
   }));
 
@@ -74,7 +88,7 @@ function writeSummary(summaryData) {
 app.post("/api/submit", (req, res) => {
   const data = req.body;
 
-  if (!data.teamNumber || !data.matchNumber || !data.score) {
+  if (!data.teamNumber || !data.matchNumber || !data.autoFuel || !data.startPos) {
     return res.status(400).json({ message: "Missing required fields." });
   }
 
