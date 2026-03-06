@@ -130,12 +130,19 @@ axios.post(webhookUrl, payload, {
     headers: {
         'Content-Type': 'application/json'
     }
+
 })
-  console.log("✅ Data received:", data);
-  res.json({ message: "Data successfully saved!" });
+.then(response => {
+    console.log('Webhook sent successfully! Status:', response.status);
+})
+.catch(error => {
+    console.error('Error sending webhook:', error.message);
 });
 
+  console.log("✅ Data received:", data);
+  res.json({ message: "Data successfully saved!" });
 
+});
 // Generate summary.json
 app.get("/api/summary/generate", (req, res) => {
   const summary = generateSummary();
